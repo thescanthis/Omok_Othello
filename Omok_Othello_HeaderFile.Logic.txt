@@ -1,0 +1,35 @@
+#pragma once
+#include<iostream>
+#include<vector>
+#define ARRSIZE 100
+#define EMPTY 0
+using namespace std;
+
+struct Logic
+{
+private:
+	enum{U,UR,R,DR,D,DL,L,UL};
+	int move[8][2] = { {-1,0}, {-1,1}, {0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}, {-1,-1}};//U~UL
+	
+	int** dat;
+	int wid=0, hei=0;
+	bool serect=0;
+	int turn=0;
+
+	pair<int, int> s[ARRSIZE];
+	int length = 0;
+
+	bool Check(int, int);
+	void addItem(int, int, int);
+	void anlyzeOmok(int, int);
+	void anlyzeOthello(int, int);
+
+	//private의 인자값을 public로 넘겨주어야할부분을 생각해보자
+public:
+	enum{OMOK,OTHELLO};
+	void MakeData(int, int);
+	void RemoveData();
+	void InitData(int);
+	bool Input(string);
+	int** GetData();
+};

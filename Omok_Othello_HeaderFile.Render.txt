@@ -1,0 +1,28 @@
+#pragma once
+#include<iostream>
+using namespace std;
+
+struct Render
+{
+private:
+	int** dat=NULL;
+	int size=0;//Because width and height are the same.
+	bool serect=0;
+
+	string str[11] = {
+		"─","│",
+		"┌","┬","┐",
+		"├","┼","┤",
+		"└","┴","┘"
+	};
+	string stone[2] = { "●","○" };
+	
+	void TopUi();
+	void PrintLine(int,int);
+	void PrintRightLine(int);
+	void PrintWideLine(int);
+	string GetLine(string, int, int);
+public:
+	void GetData(int**, int, bool);
+	void Baord();
+};

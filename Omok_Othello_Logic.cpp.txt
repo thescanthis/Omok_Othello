@@ -1,0 +1,115 @@
+#include "Logic.h"
+void Logic::addItem(int dir, int _sr, int _sc)
+{
+	int _cv = (serect == OMOK) ? turn : 3 - turn;
+	int len = length;
+	bool res = false;
+
+	for (int _r = _sr, _c = _sc;
+		(_r >= 0 && _r < hei) && (_c >= 0 && _c < wid);
+		_r += move[dir][0], _c += move[dir][1])
+	{
+		if (_r == _sr && _c == _sc) continue;
+		if (dat[_r][_c] == EMPTY) break;
+                         /*If the coordinates of the data are zero, 
+                         they stop because they are not valid values.*/
+		else if(dat[_r][_c]!=_cv){
+			res = true;
+			break;
+		}
+		s[length].first = _r;
+		s[length++].second = _c;
+	}
+	if (serect == OTHELLO && res == false) length = len;
+}
+
+void Logic::anlyzeOmok(int _r, int _c)
+{
+	for (int i = 0; i < 4; i++){
+		for (int j = i; j < 8; j += 4) {
+			addItem(j, _r, _c);
+		}
+
+		if (length == 4) return;
+		length = 0;
+	}
+}
+
+void Logic::anlyzeOthello(int _r, int _c)
+{
+	length = 0;
+	for (int i = U; i <= UL; i++)
+	{
+		addItem(i, _r, _c);
+	}
+	if (length != 0)
+	{
+		for (int i = 0; i < length; i++)
+		{
+			dat[s[i].first][s[i].second] = turn;
+		}
+	}
+}
+
+void Logic::MakeData(int _r, int _c)
+{
+	dat = (int**) new int*[_r];
+	dat[0] = (int*) new int[_r * _c];
+	for (int i = 1; i < _r; i++) dat[i] = dat[i - 1] + _c;
+	memset(dat[0], EMPTY, sizeof(int) * _r * _c);
+
+	hei = _r;
+	wid = _c;
+	turn = 1;
+}
+
+void Logic::RemoveData()
+{
+	delete(dat[0]);
+	delete(dat);
+}
+
+void Logic::InitData(int _serect)
+{
+	serect= _serect;
+
+	if (serect == OTHELLO)
+	{
+		dat[3][3] = dat[4][4] = 1;
+		dat[3][4] = dat[4][3] = 2;
+	}
+}
+bool Logic::Check(int _r, int _c)
+{
+	if (dat[_r][_c] > 0) return false;
+
+	if (serect == OMOK) anlyzeOmok(_r, _c);
+	else
+	{
+		anlyzeOthello(_r, _c);
+		if (length == 0)
+			return false;
+	}
+
+	dat[_r][_c] = turn;
+	turn = 3 - turn;
+
+	if (serect == OMOK) return(length == 4);
+	else return false;
+}
+bool Logic::Input(string _in)
+{
+	int v;
+	v = (int)_in[0];
+	int _r = (char)(v < 97) ? v - 48 : v - 87;
+
+	v = (int)_in[1];
+	int _c = (char)(v < 97) ? v - 48 : v - 87;
+
+	return Check(_r,_c);
+}
+
+int** Logic::GetData()
+{
+	return dat;
+}

@@ -1,0 +1,34 @@
+#include<iostream>
+#include "Logic.h"
+#include "Render.h"
+using namespace std;
+
+int main(void)
+{
+	int serect=0;
+	cin >> serect;
+
+	int size = (serect==1) ? 16 : 8;
+	Logic lg;
+	lg.MakeData(size, size);
+	lg.InitData(serect - 1);
+	Render rg;
+	rg.GetData(lg.GetData(), size, (size == 8));
+	string input = "";
+	bool bgameover = false;
+	while (1)
+	{
+		system("cls");
+		rg.Baord();
+		if (bgameover)
+		{
+			cout << "gameover";
+			break;
+		}
+
+		cin >> input;
+		bgameover = lg.Input(input);
+	}
+	lg.RemoveData();
+	return 0;
+}

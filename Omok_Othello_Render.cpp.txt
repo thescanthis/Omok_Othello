@@ -1,0 +1,75 @@
+#include "Render.h"
+
+void Render::TopUi()
+{
+	if (serect) cout << "   0   1   2   3   4   5   6   7";
+	else cout << " 0 1 2 3 4 5 6 7 8 9 a b c d e f";
+	cout << '\n';
+}
+
+void Render::PrintLine(int si,int sr)
+{
+	string s;
+	s = str[si];
+	cout << GetLine(s, sr, 0);
+	s = ((serect) ? str[0] : "") + str[si + 1];
+	for (int i = 1; i <= size - 2; i++)
+	{
+		cout << GetLine(s, sr, i);
+	}
+	s = ((serect) ? str[0] : "") + str[si + 2];
+	cout << GetLine(s, 0, size - 1);
+	PrintRightLine(sr);
+}
+
+void Render::PrintRightLine(int line)
+{
+	if (!serect) {
+		char c = (line < 10) ? line + 48 : line + 87;
+		cout << c;
+	}
+
+	cout << '\n';
+}
+
+void Render::PrintWideLine(int sr)
+{
+	string s = str[1];
+	cout << str[1];
+
+	for (int line = 0; line < size - 1; line++)
+	{
+		int data = dat[sr][line];
+		cout << ((data > 0) ? stone[data - 1] : "  ")+s;
+	}
+	cout <<sr<< '\n';
+}
+
+string Render::GetLine(string line, int _r, int _c)
+{
+	if (serect) return line;//참이라면 line을 그린다.
+	
+	int data = dat[_r][_c];
+	return (data > 0) ? stone[data - 1] : line;
+}
+
+void Render::GetData(int** _dat, int _size, bool _serect)
+{
+	dat = _dat;
+	size = _size;
+	serect = _serect;
+	if (serect) size++;
+}
+
+void Render::Baord()
+{
+	TopUi();
+	PrintLine(2,0);
+	for (int line = 1; line < size - 1; line++)
+	{
+		if (serect) PrintWideLine(line - 1);
+		PrintLine(5, line);
+	}
+	if (serect) PrintWideLine(size - 2);
+	PrintLine(8, size - 1);
+}
